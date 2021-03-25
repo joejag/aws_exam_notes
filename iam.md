@@ -11,3 +11,14 @@
 
 - Cloudwatch > Alarms > Billing > Create (uses SNS to email)
 - Shows alarm as "insuffcient" until 6 hours have passed
+
+# Organisatio and Consolidated Billing
+
+- Create multiple accounts off the Root.
+- Root > OrgUnit (OU) > Account
+- OU can have another OU under it. OU can have multiple Accounts
+- Consolidated Billing: More you use, less you pay
+  - one bill
+  - easy to track charges and allocate
+  - volume pricing discounts
+- Can apply Service Control Polices (SCP) to OUs or Accounts
