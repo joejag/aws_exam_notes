@@ -22,3 +22,7 @@
   - easy to track charges and allocate
   - volume pricing discounts
 - Can apply Service Control Polices (SCP) to OUs or Accounts
+
+# Workshops
+
+- Deny overrides Allow in IAM policies
