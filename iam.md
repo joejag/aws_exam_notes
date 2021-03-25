@@ -26,3 +26,7 @@
 # Workshops
 
 - Deny overrides Allow in IAM policies
+
+# Exam
+
+- PowerUser is a JobFunction that allows everything but IAM access
