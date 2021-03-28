@@ -186,7 +186,7 @@
 
 ## Spot Instances and Spot Fleets
 
-- Use unused EC2 capacotu on the cloud. 90% cost reduction.
+- Use unused EC2 capacity on the cloud. 90% cost reduction.
 - Use cases: stateless workloads, test and dev instances. Anywhere with flexible apps
 - Anywhere you can take a 1-2 minute notification of termination. Not for critical apps
 - Spot Price: Use set a maximum spot price. If Spot price is below max, then you get it
@@ -371,3 +371,33 @@
 - Summary:
   - Use WAF to block SQL injection, XSS
   - use Network ACLS to block ip addresses
+
+# EC2 Summary
+
+- EC2: Pricing models: on demand, reserved, spot, dedicated
+- spot termination: you pay per hour, unless AWS terminate it
+- EBS: Hard disk termination is off by default. Additioanl volumes are not deleted
+- EBS: Can be encyrpted on creation, can use 3rd party tools. Additional volumes can be encrypted
+- Security Groups: Deny Inbound by default. Allow Outbound by default. Changes are instant. EC2 is a many-to-many with SG
+- Security Groups: Stateful (in implies out allowed.). Cannot block ip addresses (Network ACL instead)
+- EBS types: SSD: gp2, io1 (dbs). HDD: st1 (warehouses), sc1 (file servers), Standard (IA stuff)
+- EBS: Snapshots go to S3. Point in time copies, incremental copying. First snapshot takes a while.
+- EBS: Stop the instance before making the root snapshot (optional). Create AMIs from Snapshosts.
+- EBS: Can change volume size and storage type. Always same AZ as EC2 instance
+- Migrating EBS: In region: Take snapshot, Create image, Launch Instance
+- Migrating EBS: Between region: Take snapshot, Create image, Copy Image, Launch Instance
+- Snaphosts: If encrypted, will be encrupted. Can share unencrypted snapshots. Can share with other accounts
+- Enc: Root devices can now be enc on provisioning. To enc: Create Snap, Copy Snap with Enc, Create Image, Launch Instance
+- Instance Store: Epehermeral. Cannot be stopped. EBS saves data. Reboot both without losing. EBS can be saved on termination
+- Enhanced Networking: ENI (basic), EN/A (high speed), EFA (bypass)
+- Cloudwatch: Used for performance monitoring. Monitors AWS and your apps. Every 5m by default (1m with detailed). Create Alarms
+- Cloudwatch: Dashboards. Threshold Alarms. Events from AWS resource changes. Logs.
+- CLI: IAM access required.
+- Roles: Better than using keys on Ec2 instances. Can be assigned after creation. Universal.
+- Bootstrap scripts: Run on first boot
+- Instance Meta Data and User data: Http call to get public ips 169.254.169.254
+- EFS: Uses NFS. pay per storage used. Scales to Petabytes. 1000s connections. Stored in multi AZ in region. Read after Write.
+- EFS v FSx v FSx 4 Lustre: EFS: Linux. FSx: Windows apps (SMB), FSx Lustre: HPC, direct on S3
+- Placement Groups: Clustered (same rack), Spread (no where near), Partitioned (Spread with some together)
+- Placement Groups: Only certain types of instance work there. Name needs to be unique in account. Homogenus instances rec by AWs
+- WAF: Layer 7 (sql, xss, block countries, block query params). But also NACL available.
