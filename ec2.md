@@ -234,4 +234,82 @@
 - Limit of 60 days for hibernation
 - OnDemand and Reserved instances only
 
-## Cloudwatch
+# Cloudwatch
+
+- Monitoring service for AWS resources and applications
+- Monitors:
+  - compute: EC2, Autoscaling, ELBs, Route53
+  - storage & content delivery: EBS, Storage Gateways, Cloudfront
+- CloudWatch with EC2:
+  - metrics: cpu, network, disk, status check (hypervisor, instance)
+- Similar to CloudTrail which monitors AWS console and API calls (ip address, time, user)
+- Clouwatch: performance. CloudTrail: audit of calls to AWS
+
+## Cloudwatch - Lab
+
+- CPU & Network are monitored. RAM usage and disk usage aren't in by default
+- Dashboards can be region or global
+- Events are for when resources change
+- Summary:
+  - Standard Monitoring is 5m
+  - Detailed monitoring is 1m
+  - can create dashboards, alarms, events (AWS resources changed), logs (aggreate, monitor)
+  - cloudtrail is api within platform, cloudwatch is about monitoring perf
+
+# AWS Command Line
+
+- `aws` command line is preinstalled on EC2 instances, but you will still need to configure it
+- not on the exam
+
+# IAM Roles
+
+- Use AWS platform without access keys. Can put IAM role onto EC2 instances to do so
+- Reduces breadth of attack if attacker can only use this machine to do things
+- Summary:
+  - Roles are more secure than access keys on EC2 instances
+  - Roles are easier to manage than keys (think rotation or loss)
+  - Roles can be applied after creation via console of CLI
+  - Roles are universal (it's IAM)
+
+# Bootstrap scripts
+
+- Runs as root when provisoning EC2 instance
+
+# Instance Metadata
+
+- See metadata inside EC2: `curl http://169.254.169.254/latest/user-data`
+- get ip address: `curl http://169.254.169.254/latest/meta-data/public-ipv4`
+- You could punt the ip address into S3 then have a lambda kick off to process it
+- Summary:
+  - Metadata is used to get info about an instance
+
+# EFS: Elastic File System
+
+- Think NFS, but the filesize auto increase and decreases (so can be used on multiple machines)
+- Has LifeCycle policies like S3. Can move to EFS IA which is cheaper
+- `yum install amazon-efs-tools -y` allows you to do some more things
+- Need to open up Security Group inbound to allow access to EFS. The "source" is your other security group
+- "mount target state" needs to be "available" before you can use it - which can take a few minutes
+- The attach menu in EFS gives you `sudo mount -t efs -o tls fs-eb2cdfdf:/ efs` to run - if it doesn't work check the SGs
+- Summary:
+  - EFS supports NFSv4
+  - Only pay for what you use, no pre-provisioning required like EBS
+  - Scales to Petabytes, can support 1000s of connections
+  - Data is stored across multiple AZs
+  - Read after Write consistency
+
+# Amazon FSx for Windows and Lustre
+
+- managed fully native Windows filesystem. FSx is built on Windows server
+- For use with Sharepoint, IIS etc
+- Samba (well Server Message Block (SMB)) instead of NFS. Supports AD users, security policies and DFS namespaces and replication
+- EFS does not support Windows. So use FSx there
+- FSx for Lustre: Compute intensive, High Performance. Insane speeds
+- Summary:
+  - EFS: Distributed, resilent for Linux
+  - FSx for Windows: Centralised storage for Windows apps
+  - FSx for Lustre: High speed, HPC. Can store onto S3
+
+# EC2 Placement Groups
+
+-
