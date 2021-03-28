@@ -184,6 +184,54 @@
   - You can only share unencSnaps with other accouts or made public
   - You can enc the root volume when making new instances
 
-## Spot Instances
+## Spot Instances and Spot Fleets
 
--
+- Use unused EC2 capacotu on the cloud. 90% cost reduction.
+- Use cases: stateless workloads, test and dev instances. Anywhere with flexible apps
+- Anywhere you can take a 1-2 minute notification of termination. Not for critical apps
+- Spot Price: Use set a maximum spot price. If Spot price is below max, then you get it
+  - varies hourly depending on capacity and region
+  - if the price goes above you have 2 minutes to decide to stop or terminate your instance
+- Spot Blocks prevent termination: 1-6 hours extra time
+- Check Spot instance pricing history to figure out an AZ and price to use
+- Spots are useful for:
+  - Big data & Analytics, Containerised workloads, CD/CD and testing, Web services, image and media rendering, HPC
+- Spot instances are bad for:
+  - Persistent workloads, Critical Jobs, Databases
+- Terminating spot instances:
+  - First you make a request with: max price, number, launch spec, type: one-time|persistent, from-to
+  - persistent: ec2 is stopped and restarted when prices falls again. one-time is terminated
+- Spot Fleets:
+  - Spot instances and on-demand instances. If not enough spot instances to match number then it launches on-demand
+  - Setup different launch pools (instance type, AZ, OS), multiple pools available, stops when you meet price or capacity desire
+- Strategies:
+  - capacityOptimised: from the pool with the optimal amount
+  - diverisifed: spot instances are distributed across pools
+  - lowestPrice; pool with the lowest price (DEFAULT)
+  - InstancePoolsToUseCount: used with lowestPrice to distrubute
+- Summary:
+  - Save 90% compared to OnDemand
+  - Useful when you don't need persistent storage
+  - You can block terminatation using Spot Block
+  - Fleet is a combo of Spot and OnDemand
+
+## EC2 Hibernate
+
+- terminate: deletes things, stop: keeps them on an EBS
+- When you start an EC2 instance: OS boots up, bootstrap script runs, apps start
+- Hibernate: Store RAM on disk, plus normal EBS stop behaviour
+- Difference from stopping: You retain your instanceId for the EC2 instance
+- Useful for:
+  - Long running processes. Services that take a long time to start
+- to use: in launch config you have to choose "enable hibernation as an additional stop behaviour"
+- MUST be encrypted to use this feature
+- Summary:
+- Hibernate preserves RAM in EBS
+- Faster to boot up - no OS to load again
+- Instance RAM must be less than 150Gb
+- Instance families include: C3/4/5, M3/4/5, R3/4/5 (compute, general, ram)
+- Available on Win, Azn, Ubuntu
+- Limit of 60 days for hibernation
+- OnDemand and Reserved instances only
+
+## Cloudwatch
