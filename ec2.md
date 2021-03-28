@@ -312,4 +312,62 @@
 
 # EC2 Placement Groups
 
--
+- Three types:
+  - Clustered Placement Group
+    - Instances within an AZ - High throughput, low latency - only certain instances can use this
+  - Spread Placement Group
+    - As many different AZs as possible. Small number of critical instances that should be far apart
+  - Partitioned
+    - Logical segments, Like spread, but some instanes are in the same partition
+    - For Hadoop, HBase, Cassandra
+  - Summary
+    - Clustered cannot span multi AZ
+    - Spread and Partitioned can go multi AZ
+    - Placement group names must be unique within you account
+    - Only certain instances can use groups (general, compute, memory, storage)
+    - AWS recommends you use the same instance types in a clustered group
+    - You can't merge placement groups
+    - You can move a stopped instance into a placement group via the CLI
+
+# HPC on AWS
+
+- Requires: data trasnfer, compute&networking, storage, orchestration&automation
+- Data transfer:
+  - Snowball, Snowmobile (T/P worth of data)
+  - AWS Datasync to store on S3, EFS, FSx
+  - Direct Connect
+- Compute and Networkign services:
+  - EC2 with GPU or CPU
+  - EC2 fleets (spot instances or spot fleets)
+  - Placement Groups (cluster)
+  - Enchaned Networking (no extra cost!)
+  - Elastic Network Adapters (older version is VF)
+  - Elastic Fibre Adapters (OS-Bypass, lower consistent latency - only Linux)
+- Storage services:
+  - Instance Attached:
+    - EBS (64k IOPS with provisioned IOPS)
+    - Instance Store (ephermeral, millions of IOPS)
+  - Network Storage
+    - S3
+    - EfS (IOPS scales to the tatal size, or use Proisioned IOPS)
+    - FSx for Lustre: Millions of IOPS, backed by S3
+- Orchestration and Automation
+  - AWS Batch:
+    - Run batch jobs. parallel single job that runs on multi EC2 instances, schedule jobs
+  - AWS ParralelCluster:
+    - OpenSource for doing the same thing. Simple text file to model your needs, automates creeation of resources
+
+# AWS WAF: Web Application Firewall
+
+- HTTP or HTTPS protection for CloudFront, ALB or API Gateway.
+- Layer 7, so it can see query strings, bodies
+- Configure it by IP Addresses, by query strings. Allow or give back HTTP 403 response
+- Three different behaviours:
+  - Allow all, expect ones you specify
+  - Block all, expect ones you specify
+  - Count the requests that match the proeprties you specify (passive mode)
+- Protects using conditions you specify. You can use:
+  - ip range, country, request headers, regex, length of requets, SQL injection, XSS
+- Summary:
+  - Use WAF to block SQL injection, XSS
+  - use Network ACLS to block ip addresses
