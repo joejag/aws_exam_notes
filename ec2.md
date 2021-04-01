@@ -27,7 +27,8 @@
   - regulatory: no multi-tenant
   - licensing that doesn't support mult-tenent or cloud
   - can be purchased on demand (hourly)
-  - reservation givres 70% off
+  - reservation gives 70% off
+  - No real difference between Dedicated and Dedicated Host apart from visibility to the server. Slight perf gains from Dedicated Host for multiple apps.
 - Instance types:
   - F1: Field Prgrammable I3: High Speed Storage, G3: Graphics Intensive, T3: Low cost/general, D2: Dense Storage, R5: Memory Optimised, M5: General, C5: Compute, P3: Graphics/General, X1: Memory, Z1D: High compute and memory, A1: ARM, U-6tb1: Bare metal
   - F: FPGA, I: IOPS, G: Graphics, H: High disk, T: Cheap, D: Density, R: RAM, M: Main choice, C: Compute, P: Gfx/Pics, X: Extreme Memory, Z: Extreme memory & compute, A: ARM, U: Bare Metal
@@ -77,9 +78,9 @@
   - Changes are immediate
   - Security Groups can be shared between EC2 instances.
   - An EC2 instance can have multiple Security Groups attached
-  - Securituy Groups are stateful (inbound is auto allowed for outbound)
+  - Security Groups are stateful (inbound is auto allowed for outbound)
   - Cannot block specific ip addresses with SG. You must use NACL instead
-  - You can set Allow rules, nut not Deny rules
+  - You can set Allow rules, but not Deny rules
 
 ## EBS Volumes: 101
 
@@ -94,7 +95,7 @@
 ## EBS Volumes and Snapshots
 
 - EBS volume will be made in the same AZ as the EC2 instance. Otherwise you'd get huge lag
-- When you terminate an EC2 instance is remove the EBS volume on termination
+- When you terminate an EC2 instance it removes the EBS volume on termination
 - You can modify disk allocations, but you need to perform a cmd line to use it
 - The root partition has a snapshot as it comes from the AMI - it can also be resized on the fly
 - you cannot decrease volume size
@@ -146,6 +147,7 @@
 
 - ENI: Elastic Network Interface - virtual network card
 - EN: Enhanced Networking - Use a SingleRoot IOVirtualisaiton (SR-IOV) - high perf (on some instances)
+  - EN skips the hypervisor emulation to get nearly non-virtualised speeds using a PF (Physical Function)
 - EFA: Elastic Fabric Adatper - Network device for High Performance Computing & ML
 - ENI:
   - EC2 comes with by default. Allows IPv4, plus secondary private IPv4.
@@ -176,7 +178,7 @@
 ## Encryted Root Volumes & Snapshots
 
 - To encrypt an unencrypted:
-  - create snaphsot. Copy the snap, Create image, Launch instance
+  - create snaphsot. Copy the snap (with enc), Create image, Launch instance
   - You cannot use an ecrypted image and try to have it unencrypted in the launcher
 - Summary:
   - Snaps of encVolumes are enc automatically
@@ -217,6 +219,7 @@
 
 ## EC2 Hibernate
 
+- Needs to be set when you create the instance
 - terminate: deletes things, stop: keeps them on an EBS
 - When you start an EC2 instance: OS boots up, bootstrap script runs, apps start
 - Hibernate: Store RAM on disk, plus normal EBS stop behaviour
@@ -226,13 +229,13 @@
 - to use: in launch config you have to choose "enable hibernation as an additional stop behaviour"
 - MUST be encrypted to use this feature
 - Summary:
-- Hibernate preserves RAM in EBS
-- Faster to boot up - no OS to load again
-- Instance RAM must be less than 150Gb
-- Instance families include: C3/4/5, M3/4/5, R3/4/5 (compute, general, ram)
-- Available on Win, Azn, Ubuntu
-- Limit of 60 days for hibernation
-- OnDemand and Reserved instances only
+  - Hibernate preserves RAM in EBS
+  - Faster to boot up - no OS to load again
+  - Instance RAM must be less than 150Gb
+  - Instance families include: C3/4/5, M3/4/5, R3/4/5 (compute, general, ram)
+  - Available on Win, Azn, Ubuntu
+  - Limit of 60 days for hibernation
+  - Not available on Spot instances
 
 # Cloudwatch
 
@@ -287,8 +290,9 @@
 
 - Think NFS, but the filesize auto increase and decreases (so can be used on multiple machines)
 - Has LifeCycle policies like S3. Can move to EFS IA which is cheaper
-- `yum install amazon-efs-tools -y` allows you to do some more things
-- Need to open up Security Group inbound to allow access to EFS. The "source" is your other security group
+- `yum install amazon-efs-tools -y` allows you to mount EFS devices
+- Need to open up Security Group inbound on EFS to allow access from EC2. The "source" is your other security group
+- EC2 SG needs to allow Outbound to EFS
 - "mount target state" needs to be "available" before you can use it - which can take a few minutes
 - The attach menu in EFS gives you `sudo mount -t efs -o tls fs-eb2cdfdf:/ efs` to run - if it doesn't work check the SGs
 - Summary:
@@ -336,7 +340,7 @@
   - Snowball, Snowmobile (T/P worth of data)
   - AWS Datasync to store on S3, EFS, FSx
   - Direct Connect
-- Compute and Networkign services:
+- Compute and Networking services:
   - EC2 with GPU or CPU
   - EC2 fleets (spot instances or spot fleets)
   - Placement Groups (cluster)
@@ -401,3 +405,53 @@
 - Placement Groups: Clustered (same rack), Spread (no where near), Partitioned (Spread with some together)
 - Placement Groups: Only certain types of instance work there. Name needs to be unique in account. Homogenus instances rec by AWs
 - WAF: Layer 7 (sql, xss, block countries, block query params). But also NACL available.
+
+# EC2 - Resource Groups and Tags
+
+- AWS Config can show you a count of your resources
+- You can right click on the EC2 Console and Create an Image directly from a running instance
+- AWS Resource Groups lets you search by resource type
+  - TagEditor: You can select a subset of resources and edit their tags (apply a tag to multi resources)
+  - CreateResourceGroup: Can select by Tag value
+  - SavedResourceGroups: Anything new with the Tag will appear here
+- AWSConfig: Can create rules for approved AMIs.
+  - Only fires on change. You can reboot EC2 instances to get the Rule to fire
+
+# EC2 - Working with EC2
+
+- VPC is a software networking device. No physical hardware, all virtual
+- If the default VPC is missing, under Actions you can create a new VPC
+- Default VPC is set up for you: InternetGateway, SecurityGroups, NACL, SubNets
+- When creating a new EC2 instance, Tags are applied to ENI, EBS, EC2
+- You can set an EC2 up with no ssh key, then Connect and add you public key
+- Restarting an EC2 keeps the same private IP but gets a different public IP
+- You can stop an instance and change it's instance type for vertical scaling
+
+# EC2 - Roles and Instance profiles
+
+- InstanceProfiles are for applying roles to EC2 instances
+- Roles exist as it would be burdensome to apply them to each box, including Spot instances
+- High level workflow
+  - Create an IAM Role
+  - Define which Accounts or Services can assume the Role
+  - Define what API actions and Resources the app can use after assuming the Role
+  - Specify the Role when launching the instance or attach the Role to a running instance
+  - Have the app retrieve a set of temporary creds and use them
+- Policy has "Effect" like Allow, "Action" like Put, "Resource" which is an ARN
+- Policy optionally can had a "Statement ID": Sid
+- AWS STS: Security Token Service
+- Steps:
+  - Create a Role
+  - Create a Permission so EC2 can assume that role
+  - Create Policy allowing that role to access an S3 bucket
+  - Associate the Policy with the Role
+  - Create a Development InstanceProfile
+  - Assoiate InstanceProfile with the Role
+  - Attached InstanceProfile to EC2 Instance
+- EC2 Intance can only have one role
+
+# Quiz wrong answers / extra info
+
+- Underlying Hypervisor on EC2 is Nitro or Xen
+- http://169.254.169.254 is a local-link-address and can be disabled
+- EBS Multi Attach is for connecting an EBS to 16 EC2 instances in the same AZ
