@@ -100,3 +100,79 @@
   - Encryption is available using KMS and applies to Snapshots, replicas, backups
 
   # DynamoDB
+
+  - What is it: Fast, Flexible nosql db, tiny latency at scale, document and KeyValue models, fully managed
+  - About:
+    - Stored on SSD
+    - Spread across 3 geographically distinct data centres
+    - Eventual consistent reads (by default) or Strongly consisten reads
+  - Eventual read:
+    - Consistency of writes is achieved within one second (best read perf)
+  - Strongly read:
+    - writes wait before returning
+  - Summary
+    - SSD, Geographic dispersed across 3 data centres, Eventual consistent reads (default)
+
+# Advanced DynamoDB
+
+- DyanmoDB Accelerator (DAX)
+  - In memory cache for DynamoDB. 10x perf improvement
+  - Goes from miliseconds to microseconds
+  - Devs don't need to manage caching logic
+  - Write-through cache, all requests go via it. Write improvements as well as reads
+  - Failover built in
+- Transactions
+  - Two underlying reads or write. Prepare then commit (same as all transaction stuff)
+  - Transactions use twice as much capacity
+  - 25 items, or 4Mb size is max
+- On-Demand Capacity
+  - Pay-per-request
+  - Can balance cost and perf
+  - No min capacity. Only charged for storage or backups
+  - Why not use it? You pay more per request then provisioned
+  - Use for new things when you cannot predict usage
+- On-Demand backup and restore
+  - Full backups from Console or CLI
+  - Zero downtime or perf drop off
+  - Consistent to a second, retained until deleted
+  - Region based, not cross-region
+- Point in time recovery (PITR)
+  - Protects against accidental writes or deletes
+  - Restore to last 35 days
+  - Incremental backups
+  - Not enabled by default
+  - Latest restorable is 5 minutes in the past
+- Streams
+  - Time-ordered sequence of item-level changes in a table
+  - Stored for 24 hours
+  - Looks like an event stream of changes to your Table
+  - Stream has Stream Records (changes to an item). SR has a number which indicates order of publish
+  - Stream Records are grouped into shards
+  - Can be comined with Lambdas to get stored proc type behaviour
+- Global Tables
+  - Multi-Master, Multi-Region Replication
+  - For Global apps. Based on DynamoDB Streams
+  - Multi-region DR or HA
+  - No app changes to use
+  - Replication is under a second for new items
+  - You must turn on Streams for this to work
+- Database Migration Service (DMS)
+  - Source DB:
+    - on prem, EC2, RDS
+    - Type: 6 rDBs, Sybase, Mongo, S3, DB2, AzureDB
+    - remains operational
+  - Target DB:
+    - As above
+    - Plus: DynamoDB, DocumentDB, Kinesis, RedShift, ElasticSearch, Kafka
+- Security in DynamoDB
+  - Enc at rest using KMS
+  - Site to Site VPN
+  - Direct Connect (DX)
+  - IAM Polices to Tables
+  - Fine grain access to Items
+  - CloudWatch and CloudTrail
+  - Hide in VPC with other services
+
+# Redshift
+
+-
