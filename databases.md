@@ -175,4 +175,42 @@
 
 # Redshift
 
+- Cheaper than other data warehouse solutions. $1k per Terrabyte a year
+- Different configurations
+  - Single Node (160Gb)
+  - Multi-Node
+    - Leader Node (takes connections and accept queries)
+    - Compute Nodes (128 max, store data and perform queries)
+- Advanced Compression
+  - Compress columns better than rows, as sequential data is the same
+  - Does not need indexes or views (uses less space)
+  - Auto samples data to figure out best compression scheme
+- Massive Parallel Processing (MPP)
+  - Auto distributes data and queries across nodes
+  - Add nodes as your data grows
+- Backups
+  - 1 day by default
+  - Max 35 days retention
+  - Keeps three copies: original, replica on nodes, backup on S3)
+  - async S3 replication to another region
+- Pricing
+  - Compute node hours
+  - Leader node does not count towards pricing
+  - Backups and data trasnfer
+- Security Concerns
+  - Encrypt in transit using SSL
+  - Encrypt at rest using AES-256
+  - By default, takes care of key management
+    - Can manage your own using HSM
+    - Or, KMS
+- Availability
+  - Only in 1 AZ
+  - Can restore snapshots to new AZs in an outage
+- Summary
+  - Used for BI
+  - Only in 1 AZ
+  - Backups: 1 day default, 35 days retention, keeps three copies of the data (origin, nodes, S3), async S3 to another region
+
+# Aurora
+
 -
