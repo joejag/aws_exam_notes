@@ -24,7 +24,7 @@
 - Summary
   - RDS (OLTP): Six types
   - DynamodDB (NoSQL)
-  - Redshidt (OLAP): BI or DW
+  - Redshift (OLAP): BI or DW
   - Elasticache (in memory cache): Caches frequent identical queries
 
 # RDS Lab
@@ -78,7 +78,6 @@
 # RDS Backups, Multi-AZ, Read Replicas - Lab
 
 - Can create Aurora read replicas of an existing database
-- Question? Is it better to share an RDS to reduce costs?
 - Adding a Standby AZ takes a little while to modify - you can schedule it during a window
 - You can check "Multi-AZ" in the Configuration tab
 - Reboot allows you to change AZs
@@ -255,7 +254,7 @@
 - Summary
   - increase web app and db performance
   - improve perf: add a read replica or use elasticache
-  - Redies is Multi-Az and can do backup/restore
+  - Redis is Multi-Az and can do backup/restore
 
 # DMS
 
@@ -305,3 +304,10 @@
 - read replica creation has no downtime. Thought can create CPU spikes on first creation
 - Database restores only work in a region, you can change AZ
 - Don't connect directly to the RDS, create a Route53 CNAME and change that
+
+# Quiz
+
+- Athena supports JSON, Apache ORC & Parquet, it does not support XML
+- Dyanmo is charged by capacity and storage
+- Size limit for dbs is 16Tb for IOPS ones
+- If you need rapid response in prod, provision IOPS in RDS
