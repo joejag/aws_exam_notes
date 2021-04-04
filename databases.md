@@ -213,4 +213,95 @@
 
 # Aurora
 
--
+- Competes with MS and Oracle's high end DBs while keeping the flexibility of MySQL and Postgres
+- 3-5x better perf than MySQL or PostGres at a lower price and better availability
+- Starts at 10Gb and scales in 10Gb under 64Tb
+- Compute goes to 32 CPUs and 244Gb Memory
+- 2 copies in each AZ, min 3 AZs, so 6 copies of your data
+- Scaling
+  - Can handle two node losses without hurting writes. Three nodes without hurting reads
+  - Self healing
+- Replication types:
+  - Aurora Replicas (15)
+  - MYSQL Read Replicas (5)
+  - PostgresQL (1)
+- vs Mysql replicas
+  - Aurora has more read replica capacity, faster replication, low perf impact on primary, no data loss on failover
+  - MySQL has cross-region replicas, support for edge cases about schema
+- Backups
+  - Always enabled. No impact on perf
+  - Can take snapshots, no impact on perf
+  - Can share Aurora Snapshots
+- Aurora Serverless
+  - Scales capacity on demand
+  - UseCase; infrequent, intermittent, unpredictable workloads
+- Aurora
+  - Create a read replica of RDS and it creates a Writer and Reader instance
+  - Promote instance. Boom, you've migrated to Aurora
+  - Alternative: Take snapshot, restore from Snapshot
+- Summary
+  - 6 copies of your data (3 AZ, 2 in each)
+  - Share Snapshots
+  - 3 replicas available: Aurora, Mysql, Postgres. Auto failover only on Aurora
+  - Auto backups by default
+  - Serverless for cost effective not constant workloads
+
+# Elasticache
+
+- MemCached and Redis differences:
+  - Both: scale horizonatally. offload DB
+  - Memcached: multi-threaded
+  - Redis: advanced types, multi-AZ, backup/restore, sorting
+- Summary
+  - increase web app and db performance
+  - improve perf: add a read replica or use elasticache
+  - Redies is Multi-Az and can do backup/restore
+
+# DMS
+
+- Migrates all sorts of db types between on-prem and cloud
+- It runs in the cloud with a Source and Target connection. Schedule a task to move the data
+- You can pre-create the target tables using AWS Schema Conversion Tool (SCT)
+  - SCT can convert schema types. rDB to DataWarehouse etc
+- Types of migrations:
+  - Supports homogenus migartions: Oracle to Oracle
+  - Supports hetrogeneous migrations: MS SQL to Aurora
+- Can target normal suspects, plus ElasticSearch, Kenisis, DocumentDB
+- Summary
+  - DMS migrates databases from one place to another
+  - same engine or different engines
+  - can be on prem, AWS or Azure
+  - AWS Schema Conversion Tool (SCT) is used when the DBs differ
+
+# Caching Strategies on AWS
+
+- Four options: CloudFront, API Gateway, Elasticache, DynamoDB Accelerator (DAX)
+- Better to cache at cloudfront level, then gateway, then EC/DAX from a latency point of view
+- Caching is a balancing act of recency vs latency
+
+# Elastic Map Reduce (EMR)
+
+- Big data. Apache Spark, Hive, HBase, Flink, Hudl and Presto.
+- Run Petabytes at half the cost of on-prem after 3x faster than Spark
+- Made up of nodes (EC2 backed) which have node types. EMR installs different software depending on the role (Hadoop is one)
+- Node types:
+  - Master: Manages state and tasks
+  - Core: Runs tasks and stores data in Hadoop format (HDFS). At least one of these exist
+  - Task: Runs tasks, does not store data in HDFS. Optional
+- Core and Master nodes all speak to each other
+- Log data is in /mnt/var/log. If you lose it you are toast
+  - Workaround: Move the log data onto S3 periodicallt. EMR does this every 5 minutes. The data is gone on crash or end of job
+  - Can only configure the 5 minutes when you setup the Cluster, not afterwards
+- Summary:
+  - EMR is for big data
+  - Master, Core and Task nodes
+  - By default, logs are stored on the Master node
+  - Can configure log backup to S3 every 5m. But only on creation of the cluster
+
+# RDS Lab
+
+- Read replica is also a DR option (promote it)
+- AWS Console > Events shows you all the admin stuff happening (config change, snapshot)
+- read replica creation has no downtime. Thought can create CPU spikes on first creation
+- Database restores only work in a region, you can change AZ
+- Don't connect directly to the RDS, create a Route53 CNAME and change that
