@@ -36,3 +36,8 @@
 - Multivalue answers: Same as simple but with health checks
 - Summary
   - ELB do not have IPv4 addresses
+
+# Quiz
+
+- ALIAS records are a DNS extension
+- ALIAS records can take an ARN, even in other accounts
