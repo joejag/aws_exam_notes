@@ -190,3 +190,149 @@
   - Select VPG and CustomerGateway
   - Once VPN is available, set up the VPN on the customer gateway or firewall
 - Looks like the VPN requires a CustomerGateway and VirtualPrivateGateway to work
+
+# Global Accelarator
+
+- Sends users to Global endpoints near them. Availability and performance
+- Gives you two static ip addresses. Can bring your own ip addresses
+- Works by saving your traffic going across multiple hops
+- Things involved: ip addresses, DNS Name, Endpoint Group, Endpoint
+  - Accelartor: directs traffic to optional endpoints. Has 1 or more listeners
+  - DNS Name: Each Accelator gets a domain name, or use your own
+  - Network Zone: Kinda like an AZ. Two ips -> Two zones
+  - Listener: UDP/TCP ports. Associated with Endpoints by Regions
+  - Endpoint Group: Per AWS Region. 1 or more per Region. Can adjust using a traffic dial. Let's you do blue/green deployment
+  - Endpoints: LBs, EC2 instances or IP addresses. Can weight endpoints
+- Lab making one:
+  - Give name (choose ip address), posts tcp/udp sticky, endpoint group (region/traffic dial) health checks, add endpoint (EC2, ALB)
+  - Disable then Delete Accelartor
+- Summary
+  - Improve availability and perf for local and global users
+  - Get two static ips or bring your own
+  - Traffic dials control where traffic goes
+
+# VPC Endpoints
+
+- Privately connect your VPC to supported AWS services via PowerLink with needing NAT/iGW,VPN or public ips. Does not leave AWS network
+- Virtual devices, horizontally scaled, HA no bandwidth risk
+- Two types:
+  - Interface endpoints
+    - ENI with private IP going to an AWS service (gateway, ec2, ELBs, SQS etc)
+    - Attach an ENI to an EC2 instance
+  - Gateway endpoints
+    - NAT based, S3, DynamoDB
+- Lab (adding S3 without a NAT gateway on a private network)
+  - VPC -> Create Endpoint -> Service Category (AWS services) -> Huge list -> Choose VPC, Choose RouteTable
+  - Not immediate
+  - Need to specify region on command line to see things (bug?)
+- Summary
+  - Connects privately to AWS services
+  - Also connects privagtely via PowerLink to things
+  - No other equipment required
+  - Two types: Interface and Gateway
+
+# AWS PrivateLink
+
+- Open your VPC to another VPC
+  - Could open to Internet (via iGW) - security concerns, need to manage SGs and NACLS
+  - Could VPC Peer - loads of peers, opens the whole network up rather than a host
+- Powerlink
+  - Powerlink exposes a service to 1000s of other VPCs
+  - No VPC Peering, route tables, NAT, iGWs
+  - Requires a NLB on the service and an ENI on the customer VPC
+- Summary
+  - 10s,100s,1000s of VPCs peering? Use PrivateLink
+  - Does not require VPC peering of network things
+  - Needs a NLB and ENI
+
+# AWS Transit Gateway
+
+- Network can get complicated. Transit Gateway simplifies network topologies
+- All connections go via this. VPNs, VPCs, Direct Connect. Hub and spoke model
+- Summary
+  - Transitive peering between 1000s of VPCs, on-prem
+  - hub and spoke model
+  - can have across multiple regions
+  - can go across accounts using RAM
+  - can use RouteTables to limit how VPCs talk to one another
+  - Works with DirectConnect and VPNs
+  - Supports IP Multicast (only thing that does this on AWS)
+
+# AWS VPN CloudHub
+
+- Hub and spoke VPN via your VPC and other on-prem sites
+- Over the Internet but encrypted
+
+# AWS Network Costs
+
+- Traffic going in is free
+- Internal to AZ: Via private ip address is free
+- Private IP: Internal to another AZ: Charged $0.01 per gig
+- Public IP: External to the Internet back into AWS: Twice as expensive. As using AWS Backbone network
+- Inter-Region: Same and Public IP transfer
+- Summary
+  - Use private over public ip addresses to save costs. This uses AWS backbone network
+  - Save the most by putting all EC2 in one AZ and use private IPs. Cheap, but single point of failure
+
+# VPC Summary
+
+- TODO: You must be able to build a VPC from memory
+- VPC
+  - VPCs are not peered transitive (through another) has to be 1-1 basis. Can peer between regions
+  - Create a VPC gives you a RouteTable, NACL, SG. DOES NOT do subnets or iGW
+  - AZs are randomised between accounts
+  - AWS reservers 5 address in your subnet
+  - Only one iGW per VPC
+  - SG does not span VPCs
+- NAT Instances
+  - Disable Source/Destination Check. Public subnet, route from private subnet to the NAT instance for it to work
+  - Instance Size bottlenecks the throughput. Can do autoscaling groups, behind an SG
+- NAT Gateway
+  - MAnaged version. Not behind an SG.
+  - REdundant, no patching, gets public ip, you need to update the ROuteTables to get a route out
+  - Need multiple to cover AZ going down
+- NACLS
+  - VPC gets a default one that allows everything
+  - Custom NACLS deny everything
+  - Each subnet must be associated with a NACL or it gets the default one
+  - Can block ip addys, cannot do this with SG
+  - Use a weighting rules with lowest number first. DENY rules must come first to trump ALLOW rules
+- ELBs
+  - Need two public subnets to use an internet facing load balancer
+- VPC Flow Logs
+  - Cannot turn on for other accounts which are peered
+  - Can tag them
+  - Config is set at creation - change IAM role for instance
+  - Not all IP traffic is monitored (DNS, license activation MS, 169.254, DHCP, router)
+- Bastion
+  - Allows ssh/rdp in to EC2, NAT Gateway/Instance allow traffic out
+- Direct Connect
+  - datacentre to AWS. Good for high throughput network work loads
+  - Stable and secure use cases
+  - TODO: Remember the steps to create a DC connection
+    - Create a virtual interface in DC Console (public virtual interface)
+    - VPC->VPN connections create a new Customer Gateway
+    - Create a Virtual Private Gateway
+    - Attach VPG to VPC
+    - Select VPN Connections and create new VPN Connection
+    - Select VPG and the Customer Gateway
+    - Once available, setup VPN on Customer Gateway or firewall
+- Global Accelerator
+  - Perf and availablity. 2 static ips, traffic dials, weighting
+- VPC Endpoints
+  - Connect VPCs privately without NAT stuff. Does not require public ip addresses
+  - Two types: Interface (ENI) and Gateway (S3/Dynamo)
+- AWS PrivateLink
+  - Connecting to loads of Customer VPCs via a Network Load Balancer to an ENI on the customer
+- Transit Gateway
+  - Simplify network, hub and spoke, gives transitive peering, aws & onprem
+  - regional, but can be cross-region
+  - multi AWS accounts via RAM
+  - RouteTables limit how the VPCs talk to each other
+  - Works with Direct Connect and VPN connections
+  - Supports Multicast - unique
+- VPN Cloudhub
+  - Simplify VPN connections. On-prem and AWS talking across VPNs. Hub and spoke
+- AWS Network Costs
+  - private > public for cost = use AWS backbone
+  - groups EC2 in AZ and use private for cheapness
