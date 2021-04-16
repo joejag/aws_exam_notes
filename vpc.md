@@ -336,3 +336,49 @@
 - AWS Network Costs
   - private > public for cost = use AWS backbone
   - groups EC2 in AZ and use private for cheapness
+
+# VPC Lab
+
+- Nice diagram
+  - iGW -> Router -> Route Table (region) -> NACL (AZ) -> Instances (subnet)
+- Manal VPC
+  - Create VPC -> Choose CIDR
+  - Create iGW -> it is detached -> attach to VPC
+  - Create Subnet (public) -> Choose VPC and AZ1, Choose CIDR with first two bits the same, then add one to the third with /24
+  - Create subnet (private) -> Choose VPC and AZ2, Choose CIDR with first two bits the same, then add two to the third with /24
+  - Create RouteTable (public/private) -> Choose VPC
+    - Configure Public -> Routes tab -> 0.0.0.0/0 to iGW (default has no 0.0.0.0 route)
+    - Associate public subnet with Public route table
+    - Associate private subnet with private route table
+  - Create NACL (public) -> Choose VPC, it denys all traffic by default (default NACL allows all traffic)
+    - Configure public -> has weight, port number and source (all ips)
+      - Stateless, needs outbound to work -> Allow ephmeral port range (1024-65535)
+      - Attach to Public subnet
+  - Create NACL (private)
+    - configure public -> Allow ssh from public CIDR, allow ephermeral outbound
+
+# VPC Flow Logs Lab
+
+- Flow Logs can be configured at different levels, VPC, Subnet etc
+- It's cheaper to store logs in S3 and use Athena then in CloudWatch
+- Choose VPC, Choose FlowLogs tab
+  - Configure -> filter ALLOW/DENY/ALL, change aggregation period, change storage (S3/CLoudwatch) - this modifies the bucket policy
+- CloudWatch version -> Choose Log Groups -> Create Log Group to target
+- Logs are created for ACCEPT or REJECT
+- Create Cloudwatch Alarms and analyse logs
+  - Filters take a pattern that can be port number, level of stack (tcp) amd REJECT/ALLOW
+    - Metrics are created with a namespace, name, value
+  - Choose filter and create alarm
+    - Choose time period and greater than a certain amount
+    - Can choose SNS to send an email
+  - Analyse under Logs with Insights
+    - Some sample queries are available from the right side bar like top 20 rejections
+- Athena
+  - Find flow logs day in S3: There is a button to copy an S3 URI
+  - s3://cfst-3029-1e7bf19620e957d6db62c-vpcflowlogsbucket-1d58p6nkbq1iz/AWSLogs/033266969311/vpcflowlogs/us-east-1/2021/04/16/
+  - Goto Athena -> Setup query result location
+    - Create partition table (SQL)
+
+# Quiz
+
+- egress only iGW is for prevent ipv6 into VPC and allow ipv6 out

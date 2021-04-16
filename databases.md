@@ -98,19 +98,19 @@
     - DR, Reboot to test
   - Encryption is available using KMS and applies to Snapshots, replicas, backups
 
-  # DynamoDB
+# DynamoDB
 
-  - What is it: Fast, Flexible nosql db, tiny latency at scale, document and KeyValue models, fully managed
-  - About:
-    - Stored on SSD
-    - Spread across 3 geographically distinct data centres
-    - Eventual consistent reads (by default) or Strongly consisten reads
-  - Eventual read:
-    - Consistency of writes is achieved within one second (best read perf)
-  - Strongly read:
-    - writes wait before returning
-  - Summary
-    - SSD, Geographic dispersed across 3 data centres, Eventual consistent reads (default)
+- What is it: Fast, Flexible nosql db, tiny latency at scale, document and KeyValue models, fully managed
+- About:
+  - Stored on SSD
+  - Spread across 3 geographically distinct data centres
+  - Eventual consistent reads (by default) or Strongly consisten reads
+- Eventual read:
+  - Consistency of writes is achieved within one second (best read perf)
+- Strongly read:
+  - writes wait before returning
+- Summary
+  - SSD, Geographic dispersed across 3 data centres, Eventual consistent reads (default)
 
 # Advanced DynamoDB
 
