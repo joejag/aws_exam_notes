@@ -169,4 +169,4 @@
 
 ## Quiz
 
--
+- SWF groups in 'domains' for similar work. SWF can use HTTP to process tasks
