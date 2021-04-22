@@ -91,7 +91,6 @@
   - Explicty Deny overrides everything
   - Policies only matter when they are attached
 - Permission Boundries
-
   - Set the maximum possible perms for a user - does not grant those perms
   - Used to delegate admin to other users
   - Prevents privilege escalation and unnecesary broad perms

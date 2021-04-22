@@ -62,14 +62,14 @@
   - Writes are synchronous to standby database
   - In the event of maintaince window, DB failure, AZ failure it auto failsover
   - For failover, not for performance
-  - All DBs expect Aurora
+  - All DBs except Aurora
 - Read Replica
   - Async to read replicas
   - Configure EC2 to write to one and read from the other
   - You can have read replicas of read replicas (latency though)
   - Can promote a read replica to become their own standalone database
   - UseCase: Very heavy read workloads
-  - Two ways to improve perd: read replicas and Elasticache
+  - Two ways to improve perf: read replicas and Elasticache
   - Available for all DB types
   - Not for DR. Just Scaling. Must have auto backups turned on to work. Up to 5 read replicas
   - Can have Multi-AZ read replicas. Each read replica gets a DNS name
@@ -90,7 +90,6 @@
   - this stops replication
   - this becomes it's own database
 - Summary
-
   - Two backups: Automated and Database Snapshots
   - Read Replicas:
     - Can be Multi-AZ, increase perf, requires backups, diff regions, any DB type, can be promoted
@@ -147,7 +146,7 @@
   - Looks like an event stream of changes to your Table
   - Stream has Stream Records (changes to an item). SR has a number which indicates order of publish
   - Stream Records are grouped into shards
-  - Can be comined with Lambdas to get stored proc type behaviour
+  - Can be combined with Lambdas to get stored proc type behaviour
 - Global Tables
   - Multi-Master, Multi-Region Replication
   - For Global apps. Based on DynamoDB Streams
@@ -190,7 +189,7 @@
 - Backups
   - 1 day by default
   - Max 35 days retention
-  - Keeps three copies: original, replica on nodes, backup on S3)
+  - Keeps three copies: original, replica on nodes, backup on S3
   - async S3 replication to another region
 - Pricing
   - Compute node hours
@@ -265,7 +264,7 @@
 - Types of migrations:
   - Supports homogenus migartions: Oracle to Oracle
   - Supports hetrogeneous migrations: MS SQL to Aurora
-- Can target normal suspects, plus ElasticSearch, Kenisis, DocumentDB
+- Can target normal suspects, plus ElasticSearch, Kinesis, DocumentDB
 - Summary
   - DMS migrates databases from one place to another
   - same engine or different engines
