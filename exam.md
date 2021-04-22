@@ -60,4 +60,41 @@
 
 # Networking & Content Delivery
 
--
+- NLB: Share LB using PrivateLink. IAM is just authorization
+
+# Management & Governance
+
+- CloudFormation: You associate EBS and EC2 Logical IDs together to make them work
+- OpsWorks Stacks: on-prem and AWS with chef-solo
+- Cloudtrail: Uses data events and management events
+- CloudFormation: You can directly apply or CreateChangeSet to see changes before deploying
+- TrustedAdvisor: Shows you when you are reaching AWS limits for resources
+- CloudWatch: To get swap space info you need to install an agent first on the EC2 instance
+- Organisations: Can be migrated via the AWS Orgs console
+
+# Analytics
+
+- Kinesis: Best to track user behaviour sequentially
+- Kinesis: Kinesis Data Analytics is for using SQL
+- Kinesis: FireHose can store data into S3/Redshift.
+- Kineses: Data Streams doesn't have to go straight to a backing store
+
+# Security, Identity and Compliance
+
+- CloudTrail: To monitor everything, use CloudTrail in all regions and use a single KMS key
+- Cognito: Can use MFA
+- IAM: Has a Query API
+- SSO: Use STS for roles and a AWS Federation Endpoint.
+- IAM: Groups cannot be prinicples
+- CloudFront: OAI is attached to the Bucket to only allow reads
+
+# Cloud Architecture & Design
+
+- DR: PilotLight is a warm standby of your critical services
+- DR: WarmStandby is all services, but at lower resource levels
+
+# Application Integration
+
+- HighLoad: Use Dynamo OnDemand if available, SQS is better than Dynamo Provisioned
+- SNS: Allows sending as email/json (whatever the hell that is)
+- GuardDuty: Use CloudWatch to send via SNS to GuardDuty
