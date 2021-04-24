@@ -14,6 +14,13 @@
 - DynamoDB max size is 400kb name+value
 - subnets: biggest:16, smallest: 28
 
+# A Cloud Guru: Exam 2
+
+- Spot: On termination: 120s, might miss the term notice, can get msg despite SpotBlocks in place (will kill)
+- DynamoDB: Already multi-AZ
+- VPC: Can set shared or dedicated hardware for EC2 at this level. This can be changed.
+- SQS: WaitTimeSeconds controls long polling
+
 # Digital Cloud Training: Exam 1
 
 - Cloudfront can choose regions by "price class"
@@ -38,12 +45,26 @@
 - Lambda: Use KMS to encrypt passwords as ciphertext
 - AutoScale: Can be suspended. Can put instances into a Standby state
 - EC2: If terminated it could be EBS snapshot corrupt or EBS volume limit reached
+- AutoScale: To terminate, it chooses the the AZ with the most
+- EC2: OnDemand is quicker to spin up then Spot
+- Dedicated: Only choose 'host' if licensing comes into it
+- AutoScale: If you add existing EC2 instancds to a ASG target group and it exceeds the max for hte ASG then the request will fail
+- Metadata: There is a 'Instance Metadata Query' that uses the 169.254 address to get similar info
+- ECS: There is a 'Amazon ECS optimized AMI' which installs tools. When not working: Check the IAM instance profile has the right perms, check the agent is running.
+- LaunchConfig: Are immutable
+- RunCommand: Run a command across Windows EC2 instances
+- ASG Health: Uses EC2 health check by default (can use ELB health checks instead), terminates if unhealthy, waits for inflight connections to finish (connection draining), health check for new instances has a 300 second grace period
+- AWS Batch: Replace 3rd party stuff for analytics and spinning up EC2. Can do HPC
+- Credentials: Store them in 'Systems Manager Parameter Store'
 
 # Storage notes
 
 - S3: Glue is ETL, can be kicked off by Lambda
 - Glacier: Expediated is minutes, Standard is 3-5 hours, bulk is 5-12
 - EBS: SSD goes to 16k iOps
+- EBS Backups: use 'EBS Data Lifecycle Manager'
+- S3 home dir: Create IAM policy with folder perms, add users to that group
+- EFS: Security via SG and POSIX perms
 
 # Database notes
 
@@ -53,6 +74,13 @@
 - DynamoDB: You get a 400 if you use all your writers up (ProvisionedThroughputExceededException)
 - RDS: To connect on prem: update SG and make instance available in a public subnet
 - DynamoDB: There is an S3 pointer type: S3 Object ID
+- S3: To analyse in place you can use S3 Select or Redshift Spectrum
+- RDS: Restore works withing 5m and uses the default SG rather than a custom one
+- ElastiCache: Redis cannot have an IAM role, needs a Redis AUTH to login
+- RDS: MySql hsa a AWSAuthenticationPlugin to handle requirements around login
+- ElastiCache: Memcached does multi-thread. Redis does not
+- EFS: Only the root user has access at first, you must create directories and assign them to people
+- S3: BucketPolicy can specify a referer
 
 # Migrations and Transfer
 
@@ -61,6 +89,14 @@
 # Networking & Content Delivery
 
 - NLB: Share LB using PrivateLink. IAM is just authorization
+- Gateway: On too many requests it returns a HTTP 429
+- Lambda: To access another VPC ElastiCache you need to know VPC Subnet ID and VPC SG ID
+- DirectConnect: To bring multi-office online, DC to nearest region then create private VIFs in each region
+- ALB: Can do Cognito auth
+- ALB: Cannot do weighting. Can do on-prem via ip address
+- SG: Outbound is allowed by default. Inbound is not.
+- NACL: Default is block out and in.
+- ELB: SG allow all in, outbound as ALL TCP goes to the SG of the webservers
 
 # Management & Governance
 
