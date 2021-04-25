@@ -21,6 +21,17 @@
 - SQS: WaitTimeSeconds controls long polling
 - VPC: Can set shared or dedicated hardware for EC2 at this level. This can be changed.
 
+# A Cloud Guru: Final Exam
+
+- AWS Budgets: for budgets
+- DR: Pilot Light is data rep and services turned off
+- DR: Warm Standby is scaled-down fully functional
+- Redshift: "near realtime"
+- EMR: Can be used to duplicate DynamoDB via S3. Quite a lot of DynamoDB stuff supported
+- ASG: LaunchConfiguration is old LaunchTemplate is the new hotness
+- Cloudwatch: Alarms can reboot EC2 instances
+- ENI: "warm attach" is when the instance is stopped
+
 # Digital Cloud Training: Exam 1
 
 - ALB: must be in a public subnet, but can target private subnet stuff
@@ -38,6 +49,18 @@
 - Kinesis: If it says "near real-time" use Kinesis
 - RDS: For enc in transit, you can download an AWS root cert to use
 - RDS: Read replicas cannot be enc if the host is not enc
+
+# Digital Cloud Training: Exam 2
+
+- RedShift: Can be used to create dashboards as well as analytics
+- EC2: Burstable perf is just for the CPU
+- EC2: InstanceStore is a good choice for a database
+- ASG: Target an AZ, not subnet, as subnet can be in the same AZ
+- ElastiCache: Can be used for AutoComplete in further away regions
+- CloudFront: OAI is only for S3, not EC2 or ELB
+- EC2: IF cost is a concern, use CPU alarms rather than schedules
+- S3: OneZone has less availability, 30 days is the shortest for life cycle moves
+- RedShift: Is not real-time/milisecond, use DynamoDB instead
 
 # Compute notes
 
@@ -64,6 +87,8 @@
 - Glacier: Expediated is minutes, Standard is 3-5 hours, bulk is 5-12
 - S3 home dir: Create IAM policy with folder perms, add users to that group
 - S3: Glue is ETL, can be kicked off by Lambda
+- S3: BucketPolicy can specify a referer
+- S3: To analyse in place you can use S3 Select or Redshift Spectrum
 
 # Database notes
 
@@ -78,8 +103,7 @@
 - RDS: MySql hsa a AWSAuthenticationPlugin to handle requirements around login
 - RDS: Restore works withing 5m and uses the default SG rather than a custom one
 - RDS: To connect on prem: update SG and make instance available in a public subnet
-- S3: BucketPolicy can specify a referer
-- S3: To analyse in place you can use S3 Select or Redshift Spectrum
+- Aurora: Multi-Az has read replicas already, which you can point to
 
 # Migrations and Transfer
 
@@ -95,7 +119,10 @@
 - Lambda: To access another VPC ElastiCache you need to know VPC Subnet ID and VPC SG ID
 - NACL: Default is block out and in.
 - NLB: Share LB using PrivateLink. IAM is just authorization
-- SG: Outbound is allowed by default. Inbound is not.
+- SG: For custom: Outbound is allowed by default. Inbound is not.
+- SG: For default: Outband is allowed, inbound allows only from the SG
+- ALB: You can connect to instacnes in peered VPCs, ip-addresses, on-prem via DirectConnect or VPN
+- TransitGateway: Multiple VPCs and Mulitple Customer Sites
 
 # Management & Governance
 
