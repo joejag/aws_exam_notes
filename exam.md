@@ -71,6 +71,14 @@
 - Aurora: Replicas add read and availability
 - Cloudwatch: Logs for alerts for metrics, Events for AWS resource changes
 
+# DCT: Exam 4
+
+- SSO: STS and AWS federation endpoint
+- Batch: HPC multi-node stuff
+- CloudFront: Also can do 'dynamic' traffic, not just 'static'
+- ASG: Termination is: most in AZ, oldest ConfigTemplate, nearest to billing hour
+- ASG: if 'unhealth' terminate. If 'imparised' wait a few mins
+
 # Compute notes
 
 - ASG Health: Uses EC2 health check by default (can use ELB health checks instead), terminates if unhealthy, waits for inflight connections to finish (connection draining), health check for new instances has a 300 second grace period
