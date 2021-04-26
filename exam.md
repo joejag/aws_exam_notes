@@ -62,6 +62,15 @@
 - S3: OneZone has less availability, 30 days is the shortest for life cycle moves
 - RedShift: Is not real-time/milisecond, use DynamoDB instead
 
+# DCT: Exam 3
+
+- GlobalAccelerator: If it mentions 1 or 2 ip addresses, it wants this. CloudFront cannot do ip addresses
+- PrivateLink: Can also use VPC Peering instead
+- RDS: You cannot unenc a backup, it mirrors the main instance settings
+- Kinesis: To improve perf add more shards
+- Aurora: Replicas add read and availability
+- Cloudwatch: Logs for alerts for metrics, Events for AWS resource changes
+
 # Compute notes
 
 - ASG Health: Uses EC2 health check by default (can use ELB health checks instead), terminates if unhealthy, waits for inflight connections to finish (connection draining), health check for new instances has a 300 second grace period
@@ -121,7 +130,7 @@
 - NLB: Share LB using PrivateLink. IAM is just authorization
 - SG: For custom: Outbound is allowed by default. Inbound is not.
 - SG: For default: Outband is allowed, inbound allows only from the SG
-- ALB: You can connect to instacnes in peered VPCs, ip-addresses, on-prem via DirectConnect or VPN
+- ALB: You can connect to instances in peered VPCs, ip-addresses, on-prem via DirectConnect or VPN
 - TransitGateway: Multiple VPCs and Mulitple Customer Sites
 
 # Management & Governance
